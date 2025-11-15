@@ -138,6 +138,52 @@ class DPBLModule(domintell.Module):
     def number_of_channels(self):
         return 1  # only temp
 
+
+    def set_temperature(self, temperature):
+        """Set target temperature (set point)."""
+        message = domintell.SetTemperatureMessage(
+            self.get_module_code(),
+            self.get_serial_number(),
+            temperature
+        )
+        self._controller.send(message)
+
+    def set_mode(self, mode):
+        """Set control mode: 1=Absense, 2=AUTO, 5=Comfort, 6=Frost"""
+        message = domintell.SetTemperatureModeMessage(
+            self.get_module_code(),
+            self.get_serial_number(),
+            mode
+        )
+        self._controller.send(message)
+
+    def set_automatic(self):
+        message = domintell.SetTemperatureAutomaticMessage(
+            self.get_module_code(),
+            self.get_serial_number()
+        )
+        self._controller.send(message)
+
+    def set_absence(self):
+        message = domintell.SetTemperatureAbsenceMessage(
+            self.get_module_code(),
+            self.get_serial_number()
+        )
+        self._controller.send(message)
+
+    def set_comfort(self):
+        message = domintell.SetTemperatureComfortMessage(
+            self.get_module_code(),
+            self.get_serial_number()
+        )
+        self._controller.send(message)
+
+    def set_frost(self):
+        message = domintell.SetTemperatureFrostMessage(
+            self.get_module_code(),
+            self.get_serial_number()
+        )
+        self._controller.send(message)
     def _on_message(self, message):
         # only care about PBL temp messages
         if isinstance(message, domintell.PBLTemperaturetatusMessage):

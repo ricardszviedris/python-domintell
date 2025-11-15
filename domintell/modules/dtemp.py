@@ -123,6 +123,23 @@ class DPBLModule(domintell.Module):
         self._set_point = None
         self._range = None
 
+    def _mode_text_to_number(self, mode_text):
+        mode_text = mode_text.upper()
+        if mode_text == "ABSENCE":
+            return 1
+        elif mode_text == "AUTO":
+            return 2
+        elif mode_text == "COMFORT":
+            return 5
+        elif mode_text == "FROST":
+            return 6
+        elif mode_text == "HEATING" or mode_text == "COOLING":
+            # Heating/Cooling are NOT Domintell modes, they are regulation states.
+            # They are shown as AUTO in Home Assistant.
+            return 2
+        return 2  # fallback to AUTO
+
+
     def get_temperature(self):
         return self._temperature
 
@@ -184,17 +201,24 @@ class DPBLModule(domintell.Module):
             self.get_serial_number()
         )
         self._controller.send(message)
-    def _on_message(self, message):
-        # only care about PBL temp messages
-        if isinstance(message, domintell.PBLTemperaturetatusMessage):
-            self._temperature = message.get_temperature()
-            self._set_point = message.get_set_point()
-            self._mode = message.get_mode()
-            self._range = message.get_range()
 
-            # trigger callbacks
-            for ch in self._callbacks.get(0, []):
-                ch(self._temperature, self._mode, self._set_point, self._range)
+    def _on_message(self, message):
+        if isinstance(message, PBLTemperaturetatusMessage):
+            if message.dataType == "T":
+                self._temperature = message.get_temperature()
+                self._set_point = message.get_set_point()
+                self._mode = self._mode_text_to_number(message.get_mode())
+                self._range = message.get_range()
+
+                for ch in range(self.number_of_channels()):
+                    if ch in self._callbacks:
+                        for callback in self._callbacks[ch]:
+                            callback(
+                                self._temperature,
+                                self._mode,
+                                self._set_point,
+                                self._range,
+                            )
 
 
 domintell.register_module_class(DTEM01Module)

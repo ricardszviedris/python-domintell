@@ -117,6 +117,49 @@ class Controller(object):
     def login(self, password):
         message = domintell.LoginRequest(password)
         self.send(message)
+
+
+    def send_raw(self, text):
+        """
+        Send raw LightProtocol string (HELLO, TIMEOUT=0, etc.)
+        """
+        from domintell.commands.command import Command
+
+        class RawCommand(Command):
+            def __init__(self, data):
+                super().__init__()
+                self._data = data
+
+            def command(self):
+                return self._data
+
+        self.send(RawCommand(text))
+
+    def start_hello(self, interval):
+        """
+        Start HELLO keepalive service.
+        """
+        import threading
+        self._hello_running = True
+
+        def hello_loop():
+            while getattr(self, "_hello_running", False):
+                try:
+                    self.send_raw("HELLO")
+                    self.logger.debug("HELLO keepalive sent")
+                except Exception as e:
+                    self.logger.error(f"HELLO send failed: {e}")
+                time.sleep(interval)
+
+        t = threading.Thread(target=hello_loop)
+        t.daemon = True
+        t.start()
+
+    def stop_hello(self):
+        """
+        Stop HELLO keepalive service.
+        """
+        self._hello_running = False
          
     def new_message(self, message):
         """

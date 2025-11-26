@@ -62,3 +62,5 @@ from domintell.messages.temperature_status import TE2TemperaturetatusMessage
 from domintell.messages.temperature_status import PBLTemperaturetatusMessage
 from domintell.messages.var_status import VARStatusMessage
 from domintell.messages.var_status import SYSStatusMessage
+from domintell.messages.hello import Hello
+from domintell.messages.timeout_disable import TimeoutDisable

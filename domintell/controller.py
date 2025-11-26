@@ -123,9 +123,9 @@ class Controller(object):
         """
         Send raw LightProtocol string (HELLO, TIMEOUT=0, etc.)
         """
-        from domintell.commands.command import Command
+        import domintell
 
-        class RawCommand(Command):
+        class RawCommand(domintell.Command):
             def __init__(self, data):
                 super().__init__()
                 self._data = data

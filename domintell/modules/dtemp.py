@@ -202,6 +202,20 @@ class DPBLModule(domintell.Module):
         )
         self._controller.send(message)
 
+    def set_regulation_mode(self, value):
+        """
+        Set regulation mode:
+        0 = OFF
+        1 = HEATING
+        2 = COOLING
+        """
+        message = domintell.SetRegulationModeMessage(
+            self.get_module_code(),
+            self.get_serial_number(),
+            value
+        )
+        self._controller.send(message)
+
     def _on_message(self, message):
         if isinstance(message, PBLTemperaturetatusMessage):
             if message.dataType == "T":

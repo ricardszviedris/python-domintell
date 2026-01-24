@@ -57,6 +57,7 @@ from domintell.messages.set_temperature import SetTemperatureComfortMessage
 from domintell.messages.set_temperature import SetTemperatureAutomaticMessage
 from domintell.messages.set_temperature import SetTemperatureAbsenceMessage
 from domintell.messages.set_temperature import SetTemperatureFrostMessage
+from domintell.messages.set_temperature import SetRegulationModeMessage
 from domintell.messages.temperature_status import TE1TemperaturetatusMessage
 from domintell.messages.temperature_status import TE2TemperaturetatusMessage
 from domintell.messages.temperature_status import PBLTemperaturetatusMessage

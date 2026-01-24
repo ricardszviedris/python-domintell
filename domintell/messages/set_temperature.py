@@ -56,3 +56,20 @@ class SetTemperatureSetPointMessage(domintell.Command):
     """
     def __init__(self, moduleType, serialNumber, value):
         domintell.Command.__init__(self, moduleType, serialNumber.strip(), -1, "%T", value)
+
+class SetRegulationModeMessage(domintell.Command):
+    """
+    Set regulation mode
+    0 = OFF
+    1 = HEATING
+    2 = COOLING
+    """
+    def __init__(self, moduleType, serialNumber, value):
+        domintell.Command.__init__(
+            self,
+            moduleType,
+            serialNumber.strip(),
+            -1,
+            "%R",
+            value
+        )
